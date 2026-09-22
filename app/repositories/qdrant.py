@@ -97,14 +97,19 @@ def search_chunks(
     results: list[dict] = []
 
     for result in search_results:
+        # Qdrant's payload is optional — a point could theoretically be
+        # stored without one. Fall back to an empty dict so the .get()
+        # calls below never fail.
+        payload = result.payload or {}
+
         results.append(
             {
                 "score": result.score,
-                "document_id": result.payload.get("document_id"),
-                "filename": result.payload.get("filename"),
-                "chunk_index": result.payload.get("chunk_index"),
-                "chunking_strategy": result.payload.get("chunking_strategy"),
-                "text": result.payload.get("text"),
+                "document_id": payload.get("document_id"),
+                "filename": payload.get("filename"),
+                "chunk_index": payload.get("chunk_index"),
+                "chunking_strategy": payload.get("chunking_strategy"),
+                "text": payload.get("text"),
             }
         )
 

@@ -323,15 +323,21 @@ def handle_booking_message(session_id: str, message: str) -> str:
         # Re-ask for the first field that failed, prepending the reason
         # so the user knows why they are being asked again.
         next_field = _next_missing_field(state) or next(iter(bad_fields))
+
+        # Pydantic's loc entries can be ints or strings. Normalize to str
+        # so the lookup below has a consistent type to compare against.
+        next_field_str = str(next_field)
+
         reason = next(
             (
                 err["msg"]
                 for err in exc.errors()
-                if err.get("loc") and err["loc"][0] == next_field
+                if err.get("loc") and str(err["loc"][0]) == next_field_str
             ),
             "That value didn't look right.",
         )
-        return f"{reason} {_prompt_for(next_field)}"
+
+        return f"{reason} {_prompt_for(next_field_str)}"
 
     # Persist to PostgreSQL. Redis is cleared because the booking is done.
     booking_id = uuid4()

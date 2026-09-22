@@ -1,11 +1,32 @@
+﻿# Web framework
 fastapi
 uvicorn[standard]
+python-multipart
+
+# Validation and settings
 pydantic
 pydantic-settings
 python-dotenv
+
+# Document extraction
 pymupdf
-python-multipart
-pytest
+
+# Embeddings 
 sentence-transformers
+
+# Vector store
 qdrant-client
+
+# Database
+sqlalchemy
+psycopg[binary]
+
+# Cache / chat memory
+redis
+
+# LLM
 google-genai
+
+# Testing
+pytest
+httpx

@@ -1,25 +1,34 @@
-# Python
-__pycache__/
-*.py[cod]
-
-# Virtual environment
-.venv/
-
-# Environment variables
+# Environment — NEVER commit this file. It contains your real
+# Gemini API key and database password.
 .env
 
-# IDE
-.vscode/
+# Python virtual environments
+.venv/
+.venv-fresh/
+venv/
+env/
 
-# Test/cache
+# Python bytecode caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test and tool caches
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 
-# Build
-build/
-dist/
-*.egg-info/
+# IDE and editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# OS
+# OS-specific files
 .DS_Store
 Thumbs.db
+
+# Logs and coverage
+*.log
+.coverage
+htmlcov/
