@@ -1,4 +1,4 @@
-# Palm Mind AI — Backend Assignment
+# Document-Rag-Backend
 
 A backend service built with FastAPI for document ingestion and conversational RAG with interview booking.
 
