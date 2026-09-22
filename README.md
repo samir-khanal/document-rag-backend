@@ -106,8 +106,8 @@ cp .env.example .env
 ```
 GEMINI_API_KEY=your_key_here
 QDRANT_URL=http://localhost:6333
-POSTGRES_URL=postgresql+psycopg://samir:changeme@localhost:5432/palm_mind
-DATABASE_URL=postgresql+psycopg://samir:changeme@localhost:5432/palm_mind
+POSTGRES_URL=postgresql+psycopg://app_user:app_password@localhost:5432/app_db
+DATABASE_URL=postgresql+psycopg://app_user:app_password@localhost:5432/app_db
 REDIS_URL=redis://localhost:6379/0
 ```
 

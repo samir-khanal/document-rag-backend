@@ -4,9 +4,9 @@ services:
     image: postgres:16
     container_name: palm-mind-postgres
     environment:
-      POSTGRES_DB: palm_mind
-      POSTGRES_USER: samir
-      POSTGRES_PASSWORD: palm_mind_samir
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
     ports:
       - "5432:5432"
     volumes:
