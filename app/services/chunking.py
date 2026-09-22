@@ -131,11 +131,19 @@ def recursive_chunking(
             continue
 
         previous_chunk = raw_chunks[index - 1]
-        overlap_text = previous_chunk[-overlap:]
+        # Take the last `overlap` characters, then trim to the next word boundary
+        raw_overlap = previous_chunk[-overlap:]
 
-        final_chunks.append(
-            f"{overlap_text}{chunk}".strip()
-        )
+        # This avoids cutting a word in half
+        # Prefer ending at a sentence; fall back to word boundary
+        for delimiter in [". ", "! ", "? ", " "]:
+            if delimiter in raw_overlap:
+                overlap_text = raw_overlap.split(delimiter, 1)[1]
+                break
+        else:
+            overlap_text = raw_overlap
+
+        final_chunks.append(f"{overlap_text} {chunk}".strip())
 
     return final_chunks
 

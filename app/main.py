@@ -4,7 +4,7 @@ from app.repositories.qdrant import qdrant_client
 from app.repositories.redis import redis_client
 
 from app.api.documents import router as documents_router
-
+from app.api.chat import router as chat_router 
 
 app = FastAPI(
     title="Palm Mind AI Backend",
@@ -13,6 +13,7 @@ app = FastAPI(
 )
 
 app.include_router(documents_router)
+app.include_router(chat_router) 
 
 @app.get("/health")
 def health_check() -> dict[str, str]:

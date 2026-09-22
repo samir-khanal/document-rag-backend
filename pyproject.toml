@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+markers = [
+    "integration: tests that call external services (Gemini, etc.)",
+]
+# Skip integration tests by default so `pytest tests/` stays fast and
+# deterministic. Run them explicitly with: pytest -m integration
+addopts = "-m 'not integration'"
