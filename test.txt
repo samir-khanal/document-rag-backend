@@ -1,0 +1,11 @@
+This is the first paragraph of the document. It contains several sentences so that we can test how the chunking system handles normal text.
+
+Palm Mind AI is evaluating a backend RAG system. The system needs to ingest documents, extract their text, divide the text into meaningful chunks, generate embeddings, and store those embeddings in a vector database.
+
+The document ingestion API should support different chunking strategies. Fixed-size chunking should divide the document according to a predefined character limit. Recursive chunking should try to preserve meaningful boundaries such as paragraphs, lines, sentences, and words.
+
+This is another paragraph containing additional information about retrieval augmented generation. The retrieved chunks will later be provided as context to the language model when answering a user's question.
+
+The system also needs to support conversational queries. Redis will be used to maintain conversation history, while PostgreSQL will store structured application data such as document metadata and interview booking information.
+
+Finally, the backend should expose clean REST APIs through FastAPI and should be modular enough that document processing, embeddings, vector search, database operations, and RAG logic can be tested independently.
