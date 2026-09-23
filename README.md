@@ -274,7 +274,7 @@ This split matters: if Redis restarts mid-conversation, the user loses their pro
 Verify a saved booking:
 
 ```bash
-docker exec -it palm-mind-postgres psql -U samir -d palm_mind \
+docker exec -it palm-mind-postgres psql -U app_user -d app_db \
   -c "SELECT booking_id, name, email, interview_date, interview_time FROM bookings;"
 ```
 
@@ -348,7 +348,8 @@ app/
     └── booking_service.py
 
 data/
-└── retail_policy.txt  # Sample document for the demo
+├── retail_policy.txt                    # Sample TXT document
+└── Samir_Khanal_Cover_Letter_AIML_Intern.pdf   # Sample PDF document
 ```
 
 The layering rule: `api/` handles HTTP and request validation, `services/` handles logic, `repositories/` talks to external systems. A service never imports FastAPI; an endpoint never imports the Redis client directly.
