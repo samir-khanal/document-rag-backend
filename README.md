@@ -1,11 +1,30 @@
-# Document-Rag-Backend
+# Document RAG Backend
 
-A backend service built with FastAPI for document ingestion and conversational RAG with interview booking.
+A modular FastAPI backend implementing document ingestion, semantic retrieval, conversational RAG, Redis-based multi-turn memory, and natural-language interview booking.
 
-The task asked for two APIs:
+Built as an AI/ML backend take-home project with:
 
-1. **Document Ingestion** — upload PDF or TXT files, extract text, chunk with a selectable strategy, embed, and store vectors plus metadata.
-2. **Conversational RAG** — answer questions from retrieved chunks, remember the conversation across turns, and support interview booking through natural language.
+- PDF and TXT document ingestion
+- Fixed-size and recursive chunking
+- Sentence Transformer embeddings
+- Qdrant semantic retrieval
+- Custom RAG without `RetrievalQAChain`
+- Redis-based multi-turn conversation memory
+- LLM-assisted interview booking
+- PostgreSQL persistence
+- Pydantic validation
+- Gemini fallback for booking extraction failures
+- Automated unit and integration testing
+- Docker Compose development environment
+- Swagger/OpenAPI documentation
+
+## Overview
+
+The backend exposes two REST APIs:
+
+1. **Document Ingestion** — accepts PDF/TXT files, extracts and chunks text, generates embeddings, and stores vectors and metadata.
+
+2. **Conversational RAG** — retrieves relevant document chunks, uses conversation history to handle follow-up questions, and routes interview-booking requests through a separate booking workflow.
 
 Both are implemented and runnable with a single `docker compose up -d`.
 
@@ -69,6 +88,32 @@ The two paths share infrastructure but never mix: RAG looks up documents, bookin
 | Containers | Docker Compose | One command starts Postgres, Redis, Qdrant |
 
 ---
+
+## Key Design Decisions
+
+### Qdrant for vector storage
+
+Qdrant was selected as the vector database because the task required a vector store and explicitly excluded FAISS and Chroma. It supports similarity search with metadata payloads and can run locally through Docker.
+
+### Redis for conversation state
+
+Redis stores short-lived conversation history and in-progress booking state. TTLs prevent abandoned sessions from remaining indefinitely.
+
+### PostgreSQL for persistent data
+
+PostgreSQL stores document metadata and completed bookings because these records require structured persistence beyond the lifetime of a chat session.
+
+### Custom RAG pipeline
+
+The retrieval and generation steps are implemented directly rather than using `RetrievalQAChain`:
+
+`query → embedding → Qdrant search → context construction → prompt → LLM → response`
+
+This keeps retrieval, prompt construction, memory, and response handling under application control.
+
+### Separate conversation history from retrieval
+
+Conversation history is provided to the LLM so it can interpret follow-up questions, but retrieval is based on the current user message. This prevents unrelated previous turns from continually accumulating into the retrieval query.
 
 ## Setup
 
@@ -194,7 +239,7 @@ History is used to interpret follow-up questions like *"what about damaged items
 
 **Fixed** splits text into windows of a fixed character size with overlap. Predictable and good for uniformly structured documents. The overlap is snapped to the nearest word boundary so chunks don't start mid-word.
 
-**Recursive** tries progressively smaller separators — paragraphs, then sentences, then words. Chunks align with natural prose structure and usually retrieve better for policy documents and FAQs. This is the default.
+**Recursive** tries progressively smaller separators — paragraphs, then sentences, then words. This preserves natural text boundaries and is useful for prose-heavy documents such as policies and FAQs. This is the default strategy.
 
 Both strategies use the same embedding model and store the same metadata, so the retrieval path is identical regardless of which one produced the chunks.
 
@@ -310,7 +355,7 @@ The layering rule: `api/` handles HTTP and request validation, `services/` handl
 
 ---
 
-## Limitations
+## Production Considerations
 
 - **No authentication.** `session_id` is client-supplied. In production it would be tied to an authenticated user.
 - **No rate limiting.** A single client can exhaust the Gemini quota.

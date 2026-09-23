@@ -3,6 +3,12 @@ from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
+# all-MiniLM-L6-v2 produces 384-dimensional vectors. This is the
+# single source of truth for the vector size in the project. Anything
+# that needs to match the embedding dimension (Qdrant collection,
+# future schema) must import this rather than hardcode 384.
+EMBEDDING_DIM = 384
+
 # Load the model once when the service starts.
 # Re-loading it for every document would waste time and memory.
 model = SentenceTransformer(MODEL_NAME)
